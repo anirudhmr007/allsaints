@@ -14,3 +14,4 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findByDepartmentIgnoreCase(String department);
     boolean existsByCourseCode(String courseCode);
 }
+

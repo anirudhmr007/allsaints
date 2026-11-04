@@ -17,3 +17,4 @@ public class BloodDonorApplication extends SpringBootServletInitializer {
         SpringApplication.run(BloodDonorApplication.class, args);
     }
 }
+

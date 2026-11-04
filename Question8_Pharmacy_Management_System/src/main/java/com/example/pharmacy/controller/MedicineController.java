@@ -144,3 +144,4 @@ public class MedicineController {
         return "redirect:/medicines/list";
     }
 }
+

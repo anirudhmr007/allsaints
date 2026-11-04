@@ -13,3 +13,4 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
     List<BankAccount> findByCustomerNameContainingIgnoreCase(String customerName);
     boolean existsByAccountNumber(String accountNumber);
 }
+

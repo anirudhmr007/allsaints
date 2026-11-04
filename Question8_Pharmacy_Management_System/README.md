@@ -1,19 +1,18 @@
 # Question 8: Pharmacy Management System
+### GUI Execution Guide for Spring Tools 4 for Eclipse (STS) & pgAdmin 4
 
-A healthcare pharmaceutical inventory management system built with **Spring Boot MVC**, **Spring Data JPA**, **Hibernate**, **JSP**, and **PostgreSQL**.
+A full-stack enterprise web application built using **Spring Boot MVC**, **Spring Data JPA**, **Hibernate**, **JSP**, and **PostgreSQL**.
 
 ---
 
 ## 📋 Table of Contents
 1. [Overview & Features](#overview--features)
 2. [MVC Architecture](#mvc-architecture)
-3. [Prerequisites](#prerequisites)
-4. [PostgreSQL Database Setup](#postgresql-database-setup)
-5. [Configuration](#configuration)
-6. [How to Run the Application](#how-to-run-the-application)
-7. [Endpoints & Operations](#endpoints--operations)
-8. [Business Validation Rules](#business-validation-rules)
-9. [Sample Test Data](#sample-test-data)
+3. [pgAdmin 4 Database Setup (No Terminal Needed)](#-pgadmin-4-database-setup-no-terminal-needed)
+4. [Spring Tools 4 for Eclipse (STS) Execution Guide](#-spring-tools-4-for-eclipse-sts-execution-guide)
+5. [Endpoints & Operations](#endpoints--operations)
+6. [Business Validation Rules](#business-validation-rules)
+7. [Sample Test Data](#sample-test-data)
 
 ---
 
@@ -54,40 +53,67 @@ Question8_Pharmacy_Management_System/
 
 ---
 
-## ⚙ Prerequisites
-- **JDK 17 or higher**
-- **PostgreSQL 12+**
-- **Maven 3.8+**
+## 🐘 pgAdmin 4 Database Setup (No Terminal Needed)
+
+### Step 1: Create Database in pgAdmin
+1. Open **pgAdmin 4** on your laptop and log in.
+2. In the left **Object Explorer**, expand **Servers** -> **PostgreSQL**.
+3. **Right-click** on **Databases** -> select **Create** -> click **Database...**.
+4. In the dialog, set:
+   - **Database**: `pharmacy_db`
+5. Click **Save**.
+
+### Step 2: Execute `schema.sql` in pgAdmin
+1. In the left tree, select `pharmacy_db`.
+2. From the top toolbar, click **Tools** -> **Query Tool** (or right-click `pharmacy_db` -> **Query Tool**).
+3. Click the **Open File** icon (Folder icon) on the toolbar and open:
+   `C:\WIPRO_SAMPLES\Question8_Pharmacy_Management_System\schema.sql`
+   *(Or copy and paste the SQL content from `schema.sql` directly).*
+4. Click the **Execute** button (Play triangle icon or press **F5**).
+5. The message **"Query returned successfully"** indicates tables and initial medicines are ready.
 
 ---
 
-## 🗄 PostgreSQL Database Setup
-1. Open terminal:
-   ```bash
-   psql -U postgres
-   ```
-2. Create database:
-   ```sql
-   CREATE DATABASE pharmacy_db;
-   ```
-3. Load schema and initial batches:
-   ```bash
-   \c pharmacy_db;
-   \i schema.sql;
-   ```
+## 🍃 Spring Tools 4 for Eclipse (STS) Execution Guide
 
----
+### Step 1: Import Project into STS
+1. Open **Spring Tools 4 for Eclipse (STS)**.
+2. Click **File** -> **Import...**.
+3. Select **Maven** -> **Existing Maven Projects** -> click **Next**.
+4. Click **Browse...** for **Root Directory** and select:
+   `C:\WIPRO_SAMPLES\Question8_Pharmacy_Management_System`
+5. Ensure `/pom.xml` is checked, then click **Finish**.
+6. Wait for Maven build to complete.
 
-## 🔧 Configuration (`application.properties`)
-```properties
-server.port=8088
-spring.datasource.url=jdbc:postgresql://localhost:5432/pharmacy_db
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-spring.jpa.hibernate.ddl-auto=update
-spring.mvc.view.prefix=/WEB-INF/jsp/
-spring.mvc.view.suffix=.jsp
+### Step 2: Verify / Update Database Password
+1. In STS **Package Explorer**, expand:
+   `Question8_Pharmacy_Management_System` -> `src/main/resources`
+2. Double-click `application.properties`:
+   ```properties
+   server.port=8088
+   spring.datasource.url=jdbc:postgresql://localhost:5432/pharmacy_db
+   spring.datasource.username=postgres
+   spring.datasource.password=postgres
+   ```
+3. Update `spring.datasource.password` if your pgAdmin password is different, and save (**Ctrl + S**).
+
+### Step 3: Run the Application in STS
+- **Method A**: Right-click `Question8_Pharmacy_Management_System` in Package Explorer -> **Run As** -> **1 Spring Boot App**.
+- **Method B**: In the **Boot Dashboard** view, locate `pharmacy-management-system` and click the green **(Re)start** play icon.
+
+### Step 4: Verify in Console
+The **Console** view will log:
+```text
+Tomcat started on port 8088 (http) with context path '/'
+Started PharmacyApplication in X.XXX seconds
 ```
+
+### Step 5: Test in Browser
+Open your browser and visit:
+👉 **[http://localhost:8088/medicines/list](http://localhost:8088/medicines/list)**
+
+### Step 6: Stop App
+Click the red square **Terminate** button in the Console or the **Stop** button in Boot Dashboard.
 
 ---
 
@@ -102,22 +128,6 @@ spring.mvc.view.suffix=.jsp
    - A global safety alert banner warns the pharmacist how many expired batches are currently in the system.
 3. **Date Sequence Integrity**:
    - Expiry date cannot precede the manufacturing date.
-
----
-
-## 🚀 How to Run the Application
-
-### Option A: Maven CLI
-```bash
-cd Question8_Pharmacy_Management_System
-mvn clean spring-boot:run
-```
-Visit: `http://localhost:8088/medicines/list`
-
-### Option B: IDE
-1. Open `Question8_Pharmacy_Management_System` in your IDE.
-2. Run `com.example.pharmacy.PharmacyApplication`.
-3. Open `http://localhost:8088/` in your browser.
 
 ---
 

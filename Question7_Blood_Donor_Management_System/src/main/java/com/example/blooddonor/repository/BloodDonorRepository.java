@@ -11,3 +11,4 @@ public interface BloodDonorRepository extends JpaRepository<BloodDonor, Long> {
     List<BloodDonor> findByBloodGroupIgnoreCase(String bloodGroup);
     List<BloodDonor> findByNameContainingIgnoreCase(String name);
 }
+

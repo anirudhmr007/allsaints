@@ -17,3 +17,4 @@ public class CourseApplication extends SpringBootServletInitializer {
         SpringApplication.run(CourseApplication.class, args);
     }
 }
+

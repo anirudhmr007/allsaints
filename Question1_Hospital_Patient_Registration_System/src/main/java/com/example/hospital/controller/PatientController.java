@@ -136,3 +136,4 @@ public class PatientController {
         return "redirect:/patients/list";
     }
 }
+

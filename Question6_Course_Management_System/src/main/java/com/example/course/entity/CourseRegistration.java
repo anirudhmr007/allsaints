@@ -98,3 +98,4 @@ public class CourseRegistration {
         this.registrationDate = registrationDate;
     }
 }
+

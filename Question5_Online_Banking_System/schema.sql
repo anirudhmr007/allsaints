@@ -1,8 +1,19 @@
 -- ============================================================
--- Database: banking_db
--- Run in psql or pgAdmin:
--- CREATE DATABASE banking_db;
--- \c banking_db;
+-- QUESTION 5: ONLINE BANKING SYSTEM
+-- DATABASE SETUP SCRIPT FOR PGADMIN 4
+-- ============================================================
+-- 
+-- STEP-BY-STEP PGADMIN INSTRUCTIONS:
+-- 1. Open pgAdmin 4 and enter your master password to connect.
+-- 2. In the left Object Explorer tree, expand 'Servers' -> 'PostgreSQL'.
+-- 3. Right-click 'Databases' -> select 'Create' -> click 'Database...'.
+-- 4. In the 'Database' field, type: banking_db
+-- 5. Click the 'Save' button.
+-- 6. In the left tree, select/click on 'banking_db'.
+-- 7. From the top menu, click 'Tools' -> 'Query Tool' (or right-click 'banking_db' -> 'Query Tool').
+-- 8. Open this 'schema.sql' file using the Folder icon, or copy and paste all the SQL below.
+-- 9. Click the 'Execute' button (the Play triangle icon / F5).
+-- 10. Check the 'Data Output' tab at the bottom: "Query returned successfully".
 -- ============================================================
 
 DROP TABLE IF EXISTS bank_accounts;

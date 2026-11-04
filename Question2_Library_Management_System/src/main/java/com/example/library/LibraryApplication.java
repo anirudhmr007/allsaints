@@ -17,3 +17,4 @@ public class LibraryApplication extends SpringBootServletInitializer {
         SpringApplication.run(LibraryApplication.class, args);
     }
 }
+

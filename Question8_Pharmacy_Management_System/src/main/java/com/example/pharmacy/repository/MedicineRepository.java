@@ -13,3 +13,4 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long> {
     List<Medicine> findByCategoryIgnoreCase(String category);
     List<Medicine> findByExpiryDateBefore(LocalDate date);
 }
+

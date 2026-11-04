@@ -13,3 +13,4 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
     boolean existsByCourseAndStudentId(Course course, String studentId);
     boolean existsByCourseAndStudentEmail(Course course, String studentEmail);
 }
+

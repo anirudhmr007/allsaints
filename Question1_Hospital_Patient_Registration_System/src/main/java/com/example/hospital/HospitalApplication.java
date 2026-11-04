@@ -17,3 +17,4 @@ public class HospitalApplication extends SpringBootServletInitializer {
         SpringApplication.run(HospitalApplication.class, args);
     }
 }
+

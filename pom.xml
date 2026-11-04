@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>all-saints-spring-boot-suite</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>All Saints Spring Boot Suite (STS Root Aggregator)</name>
+    <description>Root Aggregator POM to import all 8 Spring Boot projects seamlessly into Spring Tools 4 for Eclipse (STS)</description>
+
+    <modules>
+        <module>Question1_Hospital_Patient_Registration_System</module>
+        <module>Question2_Library_Management_System</module>
+        <module>Question3_Employee_Management_System</module>
+        <module>Question4_Product_Inventory_Management_System</module>
+        <module>Question5_Online_Banking_System</module>
+        <module>Question6_Course_Management_System</module>
+        <module>Question7_Blood_Donor_Management_System</module>
+        <module>Question8_Pharmacy_Management_System</module>
+    </modules>
+</project>

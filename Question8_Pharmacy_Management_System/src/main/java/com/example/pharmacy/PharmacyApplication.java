@@ -17,3 +17,4 @@ public class PharmacyApplication extends SpringBootServletInitializer {
         SpringApplication.run(PharmacyApplication.class, args);
     }
 }
+

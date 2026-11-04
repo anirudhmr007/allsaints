@@ -17,3 +17,4 @@ public class InventoryApplication extends SpringBootServletInitializer {
         SpringApplication.run(InventoryApplication.class, args);
     }
 }
+

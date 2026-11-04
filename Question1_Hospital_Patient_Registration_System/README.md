@@ -1,4 +1,5 @@
 # Question 1: Hospital Patient Registration System
+### GUI Execution Guide for Spring Tools 4 for Eclipse (STS) & pgAdmin 4
 
 A full-stack enterprise web application built using **Spring Boot MVC**, **Spring Data JPA**, **Hibernate**, **JSP (Jakarta Server Pages)**, and **PostgreSQL**.
 
@@ -7,12 +8,10 @@ A full-stack enterprise web application built using **Spring Boot MVC**, **Sprin
 ## 📋 Table of Contents
 1. [Overview & Features](#overview--features)
 2. [MVC Architecture](#mvc-architecture)
-3. [Prerequisites](#prerequisites)
-4. [PostgreSQL Database Setup](#postgresql-database-setup)
-5. [Configuration](#configuration)
-6. [How to Run the Application](#how-to-run-the-application)
-7. [Endpoints & Operations](#endpoints--operations)
-8. [Sample Test Data](#sample-test-data)
+3. [pgAdmin 4 Database Setup (No Terminal Needed)](#-pgadmin-4-database-setup-no-terminal-needed)
+4. [Spring Tools 4 for Eclipse (STS) Execution Guide](#-spring-tools-4-for-eclipse-sts-execution-guide)
+5. [Endpoints & Operations](#endpoints--operations)
+6. [Sample Test Data](#sample-test-data)
 
 ---
 
@@ -27,7 +26,6 @@ This application manages hospital patient registrations and provides end-to-end 
 ---
 
 ## 🏛 MVC Architecture
-The project strictly follows the industry standard MVC layered architecture:
 ```
 Question1_Hospital_Patient_Registration_System/
 ├── pom.xml
@@ -51,68 +49,84 @@ Question1_Hospital_Patient_Registration_System/
 
 ---
 
-## ⚙ Prerequisites
-- **Java Development Kit (JDK)**: Version 17 or higher (JDK 17, 21, or 25).
-- **PostgreSQL**: Version 12 or higher (running on port 5432).
-- **Apache Maven**: Version 3.8+ (or your IDE's embedded Maven).
+## 🐘 pgAdmin 4 Database Setup (No Terminal Needed)
+
+Follow these simple GUI steps in **pgAdmin 4**:
+
+### Step 1: Create the Database in pgAdmin
+1. Open **pgAdmin 4** on your laptop and enter your master password.
+2. In the left **Object Explorer** tree, expand **Servers** -> click **PostgreSQL 15/16/17/18**.
+3. **Right-click** on **Databases** -> select **Create** -> click **Database...**.
+4. In the dialog, set:
+   - **Database**: `hospital_db`
+5. Click **Save**.
+
+### Step 2: Run `schema.sql` in pgAdmin
+1. In the left tree, click to highlight your new database: `hospital_db`.
+2. From the top menu, click **Tools** -> **Query Tool** (or right-click `hospital_db` -> **Query Tool**).
+3. Click the **Open File** icon (Folder icon on the toolbar) and browse to:
+   `C:\WIPRO_SAMPLES\Question1_Hospital_Patient_Registration_System\schema.sql`
+   *(Alternatively, copy and paste the contents of `schema.sql` directly into the Query Tool).*
+4. Click the **Execute** button (the Play triangle icon or press **F5**).
+5. The **Data Output** pane at the bottom will display:
+   `Query returned successfully in ... msec.`
+6. In the left tree, you can expand `hospital_db` -> `Schemas` -> `public` -> `Tables` to see the `patients` table with initial records.
 
 ---
 
-## 🗄 PostgreSQL Database Setup
+## 🍃 Spring Tools 4 for Eclipse (STS) Execution Guide
 
-1. Open your terminal or `psql` command line / pgAdmin:
-   ```bash
-   psql -U postgres
-   ```
-2. Create the database:
-   ```sql
-   CREATE DATABASE hospital_db;
-   ```
-3. Connect to the database and run the schema script:
-   ```bash
-   \c hospital_db;
-   \i schema.sql;
-   ```
-   *(Or simply run the SQL statements inside `schema.sql` directly in pgAdmin query tool).*
+Follow these GUI steps in **Spring Tools 4 for Eclipse (STS)**:
 
----
+### Step 1: Import Project into STS
+1. Open **Spring Tools 4 for Eclipse (STS)**.
+2. Click **File** -> **Import...**
+3. In the Import wizard, expand **Maven** -> select **Existing Maven Projects** -> click **Next**.
+4. Click **Browse...** for **Root Directory** and select:
+   `C:\WIPRO_SAMPLES\Question1_Hospital_Patient_Registration_System`
+5. Ensure the checkbox next to `/pom.xml` is checked.
+6. Click **Finish**.
+7. Wait a few moments for STS to download any necessary Maven dependencies (watch the progress bar in the bottom-right corner of STS).
 
-## 🔧 Configuration (`application.properties`)
-Update `src/main/resources/application.properties` if your PostgreSQL credentials differ:
-```properties
-server.port=8081
-spring.datasource.url=jdbc:postgresql://localhost:5432/hospital_db
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-spring.jpa.hibernate.ddl-auto=update
-spring.mvc.view.prefix=/WEB-INF/jsp/
-spring.mvc.view.suffix=.jsp
+### Step 2: Verify / Update Database Password in STS
+1. In **Package Explorer** or **Project Explorer**, expand:
+   `Question1_Hospital_Patient_Registration_System` -> `src/main/resources`
+2. Double-click `application.properties` to open it in the editor:
+   ```properties
+   server.port=8081
+   spring.datasource.url=jdbc:postgresql://localhost:5432/hospital_db
+   spring.datasource.username=postgres
+   spring.datasource.password=postgres
+   ```
+3. If your pgAdmin PostgreSQL password is NOT `postgres` (e.g., `admin`, `root`, or your personal password), change `spring.datasource.password` to match your pgAdmin password.
+4. Press **Ctrl + S** to save the file.
+
+### Step 3: Run the Application from STS GUI
+Choose either of the two easy GUI methods:
+
+- **Method A (Recommended - Right Click)**:
+  1. In **Package Explorer**, right-click the project `Question1_Hospital_Patient_Registration_System`.
+  2. Select **Run As** -> **1 Spring Boot App**.
+
+- **Method B (Using Boot Dashboard)**:
+  1. Look at the **Boot Dashboard** view in the bottom-left corner of STS.
+  2. Under **local**, find `hospital-patient-registration`.
+  3. Click the green **(Re)start** play icon (or right-click -> **(Re)start**).
+
+### Step 4: Verify in Console
+Look at the **Console** view tab at the bottom of STS. You will see:
+```text
+Tomcat started on port 8081 (http) with context path '/'
+Started HospitalApplication in X.XXX seconds
 ```
 
----
+### Step 5: Open Application in Your Browser
+Open Chrome, Edge, or Firefox and navigate to:
+👉 **[http://localhost:8081/patients/list](http://localhost:8081/patients/list)**
 
-## 🚀 How to Run the Application
-
-### Option A: Using Maven from Command Line
-1. Navigate to the project directory:
-   ```bash
-   cd Question1_Hospital_Patient_Registration_System
-   ```
-2. Build and run:
-   ```bash
-   mvn clean spring-boot:run
-   ```
-3. Open your browser and visit:
-   ```
-   http://localhost:8081/patients/list
-   ```
-
-### Option B: Using IntelliJ IDEA / Eclipse / VS Code
-1. Open your IDE and select **Open / Import Project** -> select `Question1_Hospital_Patient_Registration_System/pom.xml`.
-2. Wait for dependencies to download.
-3. Locate `src/main/java/com/example/hospital/HospitalApplication.java`.
-4. Right-click and choose **Run 'HospitalApplication'**.
-5. Navigate to: `http://localhost:8081/`
+### Step 6: How to Stop the App in STS
+- In the **Console** view, click the red square **Terminate** button, **OR**
+- In the **Boot Dashboard**, select the application and click the red square **Stop** button.
 
 ---
 

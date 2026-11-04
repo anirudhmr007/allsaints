@@ -1,18 +1,17 @@
 # Question 2: Library Management System
+### GUI Execution Guide for Spring Tools 4 for Eclipse (STS) & pgAdmin 4
 
-A production-grade web application built using **Spring Boot MVC**, **Spring Data JPA**, **Hibernate**, **JSP**, and **PostgreSQL**.
+A full-stack enterprise web application built using **Spring Boot MVC**, **Spring Data JPA**, **Hibernate**, **JSP**, and **PostgreSQL**.
 
 ---
 
 ## 📋 Table of Contents
 1. [Overview & Features](#overview--features)
 2. [MVC Architecture](#mvc-architecture)
-3. [Prerequisites](#prerequisites)
-4. [PostgreSQL Database Setup](#postgresql-database-setup)
-5. [Configuration](#configuration)
-6. [How to Run the Application](#how-to-run-the-application)
-7. [Endpoints & Operations](#endpoints--operations)
-8. [Sample Test Data](#sample-test-data)
+3. [pgAdmin 4 Database Setup (No Terminal Needed)](#-pgadmin-4-database-setup-no-terminal-needed)
+4. [Spring Tools 4 for Eclipse (STS) Execution Guide](#-spring-tools-4-for-eclipse-sts-execution-guide)
+5. [Endpoints & Operations](#endpoints--operations)
+6. [Sample Test Data](#sample-test-data)
 
 ---
 
@@ -50,57 +49,69 @@ Question2_Library_Management_System/
 
 ---
 
-## ⚙ Prerequisites
-- **JDK 17 or higher** (JDK 17, 21, or 25)
-- **PostgreSQL 12+** running locally on port 5432
-- **Maven 3.8+** (or IDE built-in Maven)
+## 🐘 pgAdmin 4 Database Setup (No Terminal Needed)
+
+Follow these simple GUI steps in **pgAdmin 4**:
+
+### Step 1: Create Database in pgAdmin
+1. Open **pgAdmin 4** on your laptop and log in.
+2. In the left **Object Explorer**, expand **Servers** -> **PostgreSQL**.
+3. **Right-click** on **Databases** -> select **Create** -> click **Database...**.
+4. In the dialog, enter:
+   - **Database**: `library_db`
+5. Click **Save**.
+
+### Step 2: Execute `schema.sql` in pgAdmin
+1. In the left tree, click on `library_db`.
+2. From the top toolbar, click **Tools** -> **Query Tool** (or right-click `library_db` -> **Query Tool**).
+3. Click the **Open File** icon (Folder icon) on the toolbar and open:
+   `C:\WIPRO_SAMPLES\Question2_Library_Management_System\schema.sql`
+   *(Or copy and paste the SQL content from `schema.sql` into the Query Tool).*
+4. Click the **Execute** button (Play triangle icon or press **F5**).
+5. The message **"Query returned successfully"** confirms table creation and initial seed data.
 
 ---
 
-## 🗄 PostgreSQL Database Setup
-1. Open PostgreSQL terminal:
-   ```bash
-   psql -U postgres
-   ```
-2. Create database:
-   ```sql
-   CREATE DATABASE library_db;
-   ```
-3. Run the schema and initial data:
-   ```bash
-   \c library_db;
-   \i schema.sql;
-   ```
+## 🍃 Spring Tools 4 for Eclipse (STS) Execution Guide
 
----
+### Step 1: Import Project into STS
+1. Open **Spring Tools 4 for Eclipse (STS)**.
+2. Go to **File** -> **Import...**.
+3. Select **Maven** -> **Existing Maven Projects** -> click **Next**.
+4. Click **Browse...** for **Root Directory** and select:
+   `C:\WIPRO_SAMPLES\Question2_Library_Management_System`
+5. Confirm the checkbox for `/pom.xml` is checked, then click **Finish**.
+6. Wait for Maven dependency resolution in the bottom-right progress bar.
 
-## 🔧 Configuration (`application.properties`)
-```properties
-server.port=8082
-spring.datasource.url=jdbc:postgresql://localhost:5432/library_db
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-spring.jpa.hibernate.ddl-auto=update
-spring.mvc.view.prefix=/WEB-INF/jsp/
-spring.mvc.view.suffix=.jsp
+### Step 2: Verify / Update Database Password
+1. In STS **Package Explorer**, expand:
+   `Question2_Library_Management_System` -> `src/main/resources`
+2. Double-click `application.properties`:
+   ```properties
+   server.port=8082
+   spring.datasource.url=jdbc:postgresql://localhost:5432/library_db
+   spring.datasource.username=postgres
+   spring.datasource.password=postgres
+   ```
+3. If your pgAdmin password is different, adjust `spring.datasource.password` and save (**Ctrl + S**).
+
+### Step 3: Run the Application in STS
+- **Method A**: Right-click `Question2_Library_Management_System` in Package Explorer -> **Run As** -> **1 Spring Boot App**.
+- **Method B**: In the **Boot Dashboard** (bottom-left), find `library-management` and click the green **(Re)start** button.
+
+### Step 4: Verify in Console
+In the **Console** view, you will see:
+```text
+Tomcat started on port 8082 (http) with context path '/'
+Started LibraryApplication in X.XXX seconds
 ```
 
----
+### Step 5: Test in Browser
+Open your browser and navigate to:
+👉 **[http://localhost:8082/books/list](http://localhost:8082/books/list)**
 
-## 🚀 How to Run the Application
-
-### Option A: Using Maven CLI
-```bash
-cd Question2_Library_Management_System
-mvn clean spring-boot:run
-```
-Visit: `http://localhost:8082/books/list`
-
-### Option B: Using IntelliJ / Eclipse / VS Code
-1. Open the project folder `Question2_Library_Management_System`.
-2. Locate `src/main/java/com/example/library/LibraryApplication.java`.
-3. Run the `main` method.
-4. Access `http://localhost:8082/` in your browser.
+### Step 6: Stop App
+Click the red square **Terminate** button in the Console or the **Stop** button in Boot Dashboard.
 
 ---
 
