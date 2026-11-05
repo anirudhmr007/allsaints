@@ -1,11 +1,9 @@
 package com.example.pharmacy.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "medicines")
@@ -16,51 +14,40 @@ public class Medicine {
     @Column(name = "medicine_id")
     private Long medicineId;
 
-    @NotBlank(message = "Medicine name is required")
-    @Size(min = 2, max = 150, message = "Medicine name must be between 2 and 150 characters")
-    @Column(name = "medicine_name", nullable = false)
+    @Column(name = "medicine_name")
     private String medicineName;
 
-    @NotBlank(message = "Category is required")
-    @Column(name = "category", nullable = false)
+    @Column(name = "category")
     private String category;
 
-    @NotBlank(message = "Manufacturer is required")
-    @Column(name = "manufacturer", nullable = false)
+    @Column(name = "manufacturer")
     private String manufacturer;
 
-    @NotBlank(message = "Batch number is required")
-    @Column(name = "batch_number", nullable = false)
+    @Column(name = "batch_number")
     private String batchNumber;
 
-    @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.01", message = "Price must be strictly positive")
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private Double price;
 
-    @NotNull(message = "Quantity is required")
-    @Min(value = 0, message = "Negative stock quantities are strictly prohibited")
-    @Column(name = "quantity", nullable = false)
+    @Column(name = "quantity")
     private Integer quantity;
 
-    @NotNull(message = "Manufacturing date is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "manufacturing_date", nullable = false)
+    @Column(name = "manufacturing_date")
     private LocalDate manufacturingDate;
 
-    @NotNull(message = "Expiry date is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "expiry_date", nullable = false)
+    @Column(name = "expiry_date")
     private LocalDate expiryDate;
 
-    @NotBlank(message = "Supplier name is required")
-    @Column(name = "supplier_name", nullable = false)
+    @Column(name = "supplier_name")
     private String supplierName;
 
     public Medicine() {
     }
 
-    public Medicine(String medicineName, String category, String manufacturer, String batchNumber, Double price, Integer quantity, LocalDate manufacturingDate, LocalDate expiryDate, String supplierName) {
+    public Medicine(String medicineName, String category, String manufacturer, String batchNumber,
+                    Double price, Integer quantity, LocalDate manufacturingDate, LocalDate expiryDate, String supplierName) {
         this.medicineName = medicineName;
         this.category = category;
         this.manufacturer = manufacturer;
@@ -152,33 +139,8 @@ public class Medicine {
         this.supplierName = supplierName;
     }
 
-    // Expiry and Stock Validation Helpers
+    // Helper: checks if medicine is expired compared to current date
     public boolean isExpired() {
         return expiryDate != null && expiryDate.isBefore(LocalDate.now());
     }
-
-    public Long getDaysUntilExpiry() {
-        if (expiryDate == null) {
-            return null;
-        }
-        return ChronoUnit.DAYS.between(LocalDate.now(), expiryDate);
-    }
-
-    public boolean isStockAvailable() {
-        return quantity != null && quantity > 0;
-    }
-
-    @Override
-    public String toString() {
-        return "Medicine{" +
-                "medicineId=" + medicineId +
-                ", medicineName='" + medicineName + '\'' +
-                ", category='" + category + '\'' +
-                ", batchNumber='" + batchNumber + '\'' +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                ", expiryDate=" + expiryDate +
-                '}';
-    }
 }
-

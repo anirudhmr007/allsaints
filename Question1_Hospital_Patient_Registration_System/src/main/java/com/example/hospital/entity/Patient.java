@@ -1,8 +1,11 @@
 package com.example.hospital.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 
+/**
+ * Patient Entity represents a patient record in the database.
+ * Table: patients
+ */
 @Entity
 @Table(name = "patients")
 public class Patient {
@@ -12,43 +15,33 @@ public class Patient {
     @Column(name = "patient_id")
     private Long patientId;
 
-    @NotBlank(message = "Patient name is required")
-    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull(message = "Age is required")
-    @Min(value = 0, message = "Age cannot be negative")
-    @Max(value = 130, message = "Age must be valid")
     @Column(name = "age", nullable = false)
-    private Integer age;
+    private int age;
 
-    @NotBlank(message = "Gender is required")
     @Column(name = "gender", nullable = false)
     private String gender;
 
-    @NotBlank(message = "Contact number is required")
-    @Pattern(regexp = "^[0-9]{10}$", message = "Contact number must be exactly 10 digits")
     @Column(name = "contact_number", nullable = false)
     private String contactNumber;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
     @Column(name = "email", nullable = false)
     private String email;
 
-    @NotBlank(message = "Address is required")
     @Column(name = "address", nullable = false)
     private String address;
 
-    @NotBlank(message = "Blood group is required")
     @Column(name = "blood_group", nullable = false)
     private String bloodGroup;
 
+    // Default constructor (required by JPA)
     public Patient() {
     }
 
-    public Patient(String name, Integer age, String gender, String contactNumber, String email, String address, String bloodGroup) {
+    // Constructor with fields
+    public Patient(String name, int age, String gender, String contactNumber, String email, String address, String bloodGroup) {
         this.name = name;
         this.age = age;
         this.gender = gender;
@@ -58,6 +51,7 @@ public class Patient {
         this.bloodGroup = bloodGroup;
     }
 
+    // Getters and Setters
     public Long getPatientId() {
         return patientId;
     }
@@ -74,11 +68,11 @@ public class Patient {
         this.name = name;
     }
 
-    public Integer getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -121,19 +115,4 @@ public class Patient {
     public void setBloodGroup(String bloodGroup) {
         this.bloodGroup = bloodGroup;
     }
-
-    @Override
-    public String toString() {
-        return "Patient{" +
-                "patientId=" + patientId +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", gender='" + gender + '\'' +
-                ", contactNumber='" + contactNumber + '\'' +
-                ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                ", bloodGroup='" + bloodGroup + '\'' +
-                '}';
-    }
 }
-

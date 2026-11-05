@@ -42,9 +42,8 @@ Question3_Employee_Management_System/
         ├── resources/
         │   └── application.properties             # Port, DB, & JSP config
         └── webapp/WEB-INF/jsp/
-            ├── employee-list.jsp                  # Directory view
-            ├── employee-form.jsp                  # Registration/Edit form
-            └── employee-view.jsp                  # Single profile view
+            ├── employee-list.jsp                  # Directory view & search
+            └── employee-form.jsp                  # Simple Registration & Edit form
 ```
 
 ---
@@ -117,13 +116,11 @@ Click the red square **Terminate** button in the Console or the **Stop** button 
 
 | Operation | HTTP Method | URL | Description |
 |-----------|-------------|-----|-------------|
-| List Employees | `GET` | `/employees/list` or `/` | Display registered employees |
-| New Employee Form | `GET` | `/employees/new` | Display employee registration form |
-| Save Employee | `POST` | `/employees/new` | Save new employee in PostgreSQL |
+| List Employees | `GET` | `/` or `/employees` or `/employees/list` | Display registered employees |
+| New Employee Form | `GET` | `/employees/add` | Display simple employee registration form |
+| Save / Update Employee | `POST` | `/employees/save` | Save new or updated employee in PostgreSQL |
 | Search Employee | `GET` | `/employees/search?employeeId=1` | Search employee by Employee ID |
-| View Employee | `GET` | `/employees/view/{id}` | View detailed profile |
 | Edit Employee Form | `GET` | `/employees/edit/{id}` | Form to modify employee |
-| Update Employee | `POST` | `/employees/update/{id}` | Save modifications |
 | Delete Employee | `GET` | `/employees/delete/{id}` | Remove employee record |
 
 ---

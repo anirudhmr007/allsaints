@@ -2,176 +2,119 @@ package com.example.course.controller;
 
 import com.example.course.entity.Course;
 import com.example.course.service.CourseService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
+/**
+ * Controller Layer: Handles web requests for Course Management System.
+ */
 @Controller
-@RequestMapping({"/", "/courses"})
 public class CourseController {
 
-    private final CourseService courseService;
-
     @Autowired
-    public CourseController(CourseService courseService) {
-        this.courseService = courseService;
+    private CourseService courseService;
+
+    // Helper to add enrollment counts to model
+    private void attachEnrollmentData(List<Course> courses, Model model) {
+        Map<Long, Integer> enrolledMap = new HashMap<>();
+        for (Course c : courses) {
+            enrolledMap.put(c.getCourseId(), courseService.getEnrolledCount(c.getCourseId()));
+        }
+        model.addAttribute("enrolledMap", enrolledMap);
     }
 
-    // Display all available courses in a JSP table
-    @GetMapping({"", "/list"})
-    public String listCourses(Model model) {
+    // 1. Display all available courses in a JSP table
+    @GetMapping({"/", "/courses", "/courses/list"})
+    public String showCoursesList(Model model) {
         List<Course> courses = courseService.getAllCourses();
         model.addAttribute("courses", courses);
+        attachEnrollmentData(courses, model);
         return "course-list";
     }
 
-    // Show form to add a new course
-    @GetMapping("/new")
+    // 2. Show form to add a new course
+    @GetMapping("/courses/add")
     public String showAddCourseForm(Model model) {
-        if (!model.containsAttribute("course")) {
-            model.addAttribute("course", new Course());
-        }
-        model.addAttribute("isEdit", false);
+        model.addAttribute("course", new Course());
+        model.addAttribute("pageTitle", "Add New Course");
         return "course-form";
     }
 
-    // Add a new course and save details in PostgreSQL
-    @PostMapping("/new")
-    public String saveCourse(@Valid @ModelAttribute("course") Course course,
-                             BindingResult result,
-                             RedirectAttributes redirectAttributes,
-                             Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("isEdit", false);
-            return "course-form";
-        }
-        try {
-            courseService.saveCourse(course);
-            redirectAttributes.addFlashAttribute("successMessage",
-                    "Course '" + course.getCourseName() + " (" + course.getCourseCode() + ")' added successfully!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error adding course: " + e.getMessage());
-            return "redirect:/courses/new";
-        }
-        return "redirect:/courses/list";
+    // 3. Save new course or update existing course
+    @PostMapping("/courses/save")
+    public String saveCourse(@ModelAttribute("course") Course course, RedirectAttributes redirectAttributes) {
+        courseService.saveCourse(course);
+        redirectAttributes.addFlashAttribute("message", "Course saved successfully!");
+        return "redirect:/courses";
     }
 
-    // Search for a course using Course ID
-    @GetMapping("/search")
-    public String searchCourse(@RequestParam(value = "courseId", required = false) Long courseId,
-                               Model model) {
-        if (courseId == null) {
-            return "redirect:/courses/list";
-        }
-
-        Optional<Course> courseOpt = courseService.getCourseById(courseId);
-        List<Course> searchResults = new ArrayList<>();
-        if (courseOpt.isPresent()) {
-            searchResults.add(courseOpt.get());
-            model.addAttribute("searchSuccess", "Found course with ID: " + courseId);
+    // 4. Search for a course using Course ID
+    @GetMapping("/courses/search")
+    public String searchCourse(@RequestParam(value = "courseId", required = false) Long courseId, Model model) {
+        if (courseId != null) {
+            Course course = courseService.getCourseById(courseId);
+            List<Course> resultList = new ArrayList<>();
+            if (course != null) {
+                resultList.add(course);
+            } else {
+                model.addAttribute("error", "No course found with Course ID: " + courseId);
+            }
+            model.addAttribute("courses", resultList);
+            model.addAttribute("searchedId", courseId);
+            attachEnrollmentData(resultList, model);
         } else {
-            model.addAttribute("searchError", "No course found with Course ID: " + courseId);
+            List<Course> all = courseService.getAllCourses();
+            model.addAttribute("courses", all);
+            attachEnrollmentData(all, model);
         }
-        model.addAttribute("courses", searchResults);
-        model.addAttribute("searchedId", courseId);
         return "course-list";
     }
 
-    // View course details & registered students
-    @GetMapping("/view/{id}")
-    public String viewCourse(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<Course> courseOpt = courseService.getCourseById(id);
-        if (courseOpt.isPresent()) {
-            Course course = courseOpt.get();
-            model.addAttribute("course", course);
-            model.addAttribute("registrations", courseService.getCourseRegistrations(id));
-            return "course-view";
-        }
-        redirectAttributes.addFlashAttribute("errorMessage", "Course not found with ID: " + id);
-        return "redirect:/courses/list";
+    // 5. Show form to update course details
+    @GetMapping("/courses/edit/{id}")
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
+        Course course = courseService.getCourseById(id);
+        model.addAttribute("course", course);
+        model.addAttribute("pageTitle", "Update Course Details");
+        return "course-form";
     }
 
-    // Show edit course form
-    @GetMapping("/edit/{id}")
-    public String showEditCourseForm(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<Course> courseOpt = courseService.getCourseById(id);
-        if (courseOpt.isPresent()) {
-            model.addAttribute("course", courseOpt.get());
-            model.addAttribute("isEdit", true);
-            return "course-form";
-        }
-        redirectAttributes.addFlashAttribute("errorMessage", "Course not found with ID: " + id);
-        return "redirect:/courses/list";
-    }
-
-    // Update course details
-    @PostMapping("/update/{id}")
-    public String updateCourse(@PathVariable("id") Long id,
-                               @Valid @ModelAttribute("course") Course course,
-                               BindingResult result,
-                               RedirectAttributes redirectAttributes,
-                               Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("isEdit", true);
-            return "course-form";
-        }
-        try {
-            courseService.updateCourse(id, course);
-            redirectAttributes.addFlashAttribute("successMessage", "Course ID " + id + " updated successfully!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error updating course: " + e.getMessage());
-        }
-        return "redirect:/courses/list";
-    }
-
-    // Delete a course record using Course ID
-    @GetMapping("/delete/{id}")
+    // 6. Delete a course record using Course ID
+    @GetMapping("/courses/delete/{id}")
     public String deleteCourse(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        boolean deleted = courseService.deleteCourseById(id);
-        if (deleted) {
-            redirectAttributes.addFlashAttribute("successMessage", "Course with ID " + id + " deleted successfully!");
+        courseService.deleteCourse(id);
+        redirectAttributes.addFlashAttribute("message", "Course deleted successfully!");
+        return "redirect:/courses";
+    }
+
+    // 7. Show student registration form
+    @GetMapping("/courses/register")
+    public String showRegisterStudentForm(@RequestParam(value = "courseId", required = false) Long courseId, Model model) {
+        model.addAttribute("courses", courseService.getAllCourses());
+        model.addAttribute("selectedCourseId", courseId);
+        return "course-register";
+    }
+
+    // 8. Submit student course registration
+    @PostMapping("/courses/register/save")
+    public String registerStudent(@RequestParam("courseId") Long courseId,
+                                  @RequestParam("studentId") String studentId,
+                                  @RequestParam("studentName") String studentName,
+                                  RedirectAttributes redirectAttributes) {
+        String result = courseService.registerStudent(courseId, studentId, studentName);
+        if (result.startsWith("Error")) {
+            redirectAttributes.addFlashAttribute("error", result);
         } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Course with ID " + id + " not found.");
+            redirectAttributes.addFlashAttribute("message", result);
         }
-        return "redirect:/courses/list";
-    }
-
-    // Show student registration form for a course
-    @GetMapping("/register-student")
-    public String showRegisterStudentForm(@RequestParam("courseId") Long courseId, Model model, RedirectAttributes redirectAttributes) {
-        Optional<Course> courseOpt = courseService.getCourseById(courseId);
-        if (courseOpt.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Course not found.");
-            return "redirect:/courses/list";
-        }
-        model.addAttribute("course", courseOpt.get());
-        return "course-register-student";
-    }
-
-    // Process student registration with capacity and duplicate validation
-    @PostMapping("/register-student")
-    public String processStudentRegistration(@RequestParam("courseId") Long courseId,
-                                            @RequestParam("studentId") String studentId,
-                                            @RequestParam("studentName") String studentName,
-                                            @RequestParam("studentEmail") String studentEmail,
-                                            RedirectAttributes redirectAttributes) {
-        try {
-            courseService.registerStudent(courseId, studentId, studentName, studentEmail);
-            redirectAttributes.addFlashAttribute("successMessage",
-                    "Student '" + studentName + " (" + studentId + ")' successfully registered for course!");
-            return "redirect:/courses/view/" + courseId;
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/courses/register-student?courseId=" + courseId;
-        }
+        return "redirect:/courses";
     }
 }
-

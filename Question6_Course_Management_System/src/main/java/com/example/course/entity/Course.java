@@ -1,10 +1,11 @@
 package com.example.course.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Course Entity represents an academic course.
+ * Table: courses
+ */
 @Entity
 @Table(name = "courses")
 public class Course {
@@ -14,45 +15,31 @@ public class Course {
     @Column(name = "course_id")
     private Long courseId;
 
-    @NotBlank(message = "Course code is required")
     @Column(name = "course_code", nullable = false, unique = true)
     private String courseCode;
 
-    @NotBlank(message = "Course name is required")
-    @Size(min = 2, max = 150, message = "Course name must be between 2 and 150 characters")
     @Column(name = "course_name", nullable = false)
     private String courseName;
 
-    @NotBlank(message = "Department is required")
     @Column(name = "department", nullable = false)
     private String department;
 
-    @NotBlank(message = "Faculty name is required")
     @Column(name = "faculty_name", nullable = false)
     private String facultyName;
 
-    @NotNull(message = "Credits are required")
-    @Min(value = 1, message = "Credits must be at least 1")
-    @Max(value = 10, message = "Credits must not exceed 10")
     @Column(name = "credits", nullable = false)
-    private Integer credits;
+    private int credits;
 
-    @NotBlank(message = "Semester is required")
     @Column(name = "semester", nullable = false)
     private String semester;
 
-    @NotNull(message = "Course capacity is required")
-    @Min(value = 1, message = "Course capacity must be at least 1")
     @Column(name = "course_capacity", nullable = false)
-    private Integer courseCapacity;
-
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<CourseRegistration> registrations = new ArrayList<>();
+    private int courseCapacity;
 
     public Course() {
     }
 
-    public Course(String courseCode, String courseName, String department, String facultyName, Integer credits, String semester, Integer courseCapacity) {
+    public Course(String courseCode, String courseName, String department, String facultyName, int credits, String semester, int courseCapacity) {
         this.courseCode = courseCode;
         this.courseName = courseName;
         this.department = department;
@@ -102,11 +89,11 @@ public class Course {
         this.facultyName = facultyName;
     }
 
-    public Integer getCredits() {
+    public int getCredits() {
         return credits;
     }
 
-    public void setCredits(Integer credits) {
+    public void setCredits(int credits) {
         this.credits = credits;
     }
 
@@ -118,46 +105,11 @@ public class Course {
         this.semester = semester;
     }
 
-    public Integer getCourseCapacity() {
+    public int getCourseCapacity() {
         return courseCapacity;
     }
 
-    public void setCourseCapacity(Integer courseCapacity) {
+    public void setCourseCapacity(int courseCapacity) {
         this.courseCapacity = courseCapacity;
     }
-
-    public List<CourseRegistration> getRegistrations() {
-        return registrations;
-    }
-
-    public void setRegistrations(List<CourseRegistration> registrations) {
-        this.registrations = registrations;
-    }
-
-    public int getEnrolledCount() {
-        return registrations != null ? registrations.size() : 0;
-    }
-
-    public boolean isFull() {
-        return getEnrolledCount() >= courseCapacity;
-    }
-
-    public int getAvailableSeats() {
-        return Math.max(0, courseCapacity - getEnrolledCount());
-    }
-
-    @Override
-    public String toString() {
-        return "Course{" +
-                "courseId=" + courseId +
-                ", courseCode='" + courseCode + '\'' +
-                ", courseName='" + courseName + '\'' +
-                ", department='" + department + '\'' +
-                ", facultyName='" + facultyName + '\'' +
-                ", credits=" + credits +
-                ", semester='" + semester + '\'' +
-                ", courseCapacity=" + courseCapacity +
-                '}';
-    }
 }
-

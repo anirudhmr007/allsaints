@@ -6,95 +6,67 @@ import com.example.course.repository.CourseRegistrationRepository;
 import com.example.course.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Service Layer: Business logic and validations for Course Management.
+ */
 @Service
-@Transactional
 public class CourseService {
 
-    private final CourseRepository courseRepository;
-    private final CourseRegistrationRepository registrationRepository;
+    @Autowired
+    private CourseRepository courseRepository;
 
     @Autowired
-    public CourseService(CourseRepository courseRepository, CourseRegistrationRepository registrationRepository) {
-        this.courseRepository = courseRepository;
-        this.registrationRepository = registrationRepository;
-    }
+    private CourseRegistrationRepository registrationRepository;
 
+    // 1. Get all available courses
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
 
-    public Optional<Course> getCourseById(Long id) {
-        return courseRepository.findById(id);
+    // 2. Find course by Course ID
+    public Course getCourseById(Long id) {
+        return courseRepository.findById(id).orElse(null);
     }
 
+    // 3. Add or update course
     public Course saveCourse(Course course) {
-        if (course.getCourseId() == null && courseRepository.existsByCourseCode(course.getCourseCode())) {
-            throw new IllegalArgumentException("Course with Code '" + course.getCourseCode() + "' already exists.");
-        }
         return courseRepository.save(course);
     }
 
-    public Course updateCourse(Long id, Course updated) {
-        return courseRepository.findById(id).map(existing -> {
-            existing.setCourseName(updated.getCourseName());
-            existing.setDepartment(updated.getDepartment());
-            existing.setFacultyName(updated.getFacultyName());
-            existing.setCredits(updated.getCredits());
-            existing.setSemester(updated.getSemester());
-            // Capacity validation: capacity cannot be less than currently enrolled students
-            if (updated.getCourseCapacity() < existing.getEnrolledCount()) {
-                throw new IllegalArgumentException("Course capacity cannot be lower than current enrollment count ("
-                        + existing.getEnrolledCount() + ").");
-            }
-            existing.setCourseCapacity(updated.getCourseCapacity());
-            return courseRepository.save(existing);
-        }).orElseThrow(() -> new IllegalArgumentException("Course not found with ID: " + id));
+    // 4. Delete course by Course ID
+    public void deleteCourse(Long id) {
+        courseRepository.deleteById(id);
     }
 
-    public boolean deleteCourseById(Long id) {
-        if (courseRepository.existsById(id)) {
-            courseRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    // 5. Get number of currently enrolled students for a course
+    public int getEnrolledCount(Long courseId) {
+        return registrationRepository.findByCourseId(courseId).size();
     }
 
-    // Register student to a course with capacity and duplicate checks
-    public CourseRegistration registerStudent(Long courseId, String studentId, String studentName, String studentEmail) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found with ID: " + courseId));
-
-        // 1. Capacity validation: prevent registration when course capacity is full
-        if (course.isFull()) {
-            throw new IllegalStateException("Registration Rejected: Course '" + course.getCourseName()
-                    + " (" + course.getCourseCode() + ")' is FULL. Capacity of " + course.getCourseCapacity() + " students reached.");
+    // 6. Register a student with Capacity and Duplicate checks
+    public String registerStudent(Long courseId, String studentId, String studentName) {
+        Course course = getCourseById(courseId);
+        if (course == null) {
+            return "Error: Course not found!";
         }
 
-        // 2. Duplicate registration validation: avoid duplicate student registrations for same course
-        if (registrationRepository.existsByCourseAndStudentId(course, studentId.trim())) {
-            throw new IllegalArgumentException("Duplicate Registration: Student ID '" + studentId
-                    + "' is ALREADY registered for course " + course.getCourseCode() + ".");
+        // Validation 1: Prevent registration if course capacity is full
+        int currentEnrolled = getEnrolledCount(courseId);
+        if (currentEnrolled >= course.getCourseCapacity()) {
+            return "Error: Course capacity is full (" + currentEnrolled + "/" + course.getCourseCapacity() + ")! Cannot register.";
         }
 
-        if (registrationRepository.existsByCourseAndStudentEmail(course, studentEmail.trim())) {
-            throw new IllegalArgumentException("Duplicate Registration: Student email '" + studentEmail
-                    + "' is ALREADY registered for course " + course.getCourseCode() + ".");
+        // Validation 2: Avoid duplicate student registrations for the same course
+        if (registrationRepository.existsByCourseIdAndStudentId(courseId, studentId.trim())) {
+            return "Error: Student with ID '" + studentId + "' is ALREADY registered for this course!";
         }
 
-        CourseRegistration registration = new CourseRegistration(course, studentId.trim(), studentName.trim(), studentEmail.trim(), LocalDate.now());
-        return registrationRepository.save(registration);
-    }
-
-    public List<CourseRegistration> getCourseRegistrations(Long courseId) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found with ID: " + courseId));
-        return registrationRepository.findByCourse(course);
+        // Save registration
+        CourseRegistration reg = new CourseRegistration(courseId, studentId.trim(), studentName.trim());
+        registrationRepository.save(reg);
+        return "Success: Student " + studentName + " (" + studentId + ") registered successfully for " + course.getCourseName() + "!";
     }
 }
-

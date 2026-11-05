@@ -48,10 +48,9 @@ Question6_Course_Management_System/
         ├── resources/
         │   └── application.properties                     # Port 8086, DB, & JSP config
         └── webapp/WEB-INF/jsp/
-            ├── course-list.jsp                            # Offerings table with capacity indicators
+            ├── course-list.jsp                            # Offerings table with capacity indicators & search
             ├── course-form.jsp                            # Add & edit course
-            ├── course-view.jsp                            # Course profile & class roster
-            └── course-register-student.jsp                # Student course registration form
+            └── course-register.jsp                        # Simple student course registration form
 ```
 
 ---
@@ -137,16 +136,14 @@ Click the red square **Terminate** button in the Console or the **Stop** button 
 
 | Operation | HTTP Method | URL | Description |
 |-----------|-------------|-----|-------------|
-| Display Available Courses | `GET` | `/courses/list` or `/` | Catalog with seat counters & progress |
-| Add Course Form | `GET` | `/courses/new` | Open course creation form |
-| Save Course | `POST` | `/courses/new` | Persist course in PostgreSQL |
+| Display Available Courses | `GET` | `/` or `/courses` or `/courses/list` | Catalog with seat counters & progress |
+| Add Course Form | `GET` | `/courses/add` | Open simple course creation form |
+| Save / Update Course | `POST` | `/courses/save` | Persist new or updated course in PostgreSQL |
 | Search Course | `GET` | `/courses/search?courseId=1` | Search course by Course ID |
-| View Course & Roster | `GET` | `/courses/view/{id}` | View course details and student roster |
 | Edit Course Form | `GET` | `/courses/edit/{id}` | Edit course form |
-| Update Course | `POST` | `/courses/update/{id}` | Save course modifications |
 | Delete Course | `GET` | `/courses/delete/{id}` | Delete course and its registrations |
-| Register Student Form | `GET` | `/courses/register-student?courseId=1` | Open student registration form |
-| Submit Student Registration | `POST` | `/courses/register-student` | Enroll student with validations |
+| Enroll Student Form | `GET` | `/courses/enroll/{id}` | Open student registration form for course |
+| Submit Student Registration | `POST` | `/courses/enroll` | Enroll student with capacity & duplicate checks |
 
 ---
 

@@ -135,16 +135,18 @@ Look at the **Console** tab at the bottom of STS:
 
 Open your preferred web browser (Google Chrome, Microsoft Edge, or Mozilla Firefox) and visit the corresponding URL:
 
-| Question | Browser URL | What to Test |
-|----------|-------------|--------------|
-| **Q1: Hospital System** | [http://localhost:8081/patients/list](http://localhost:8081/patients/list) | Register patient, search by ID, update, delete |
-| **Q2: Library System** | [http://localhost:8082/books/list](http://localhost:8082/books/list) | Add book, view catalogue, search, edit copies |
-| **Q3: Employee System** | [http://localhost:8083/employees/list](http://localhost:8083/employees/list) | Add employee, view department, edit salary |
-| **Q4: Inventory System** | [http://localhost:8084/products/list](http://localhost:8084/products/list) | Add product, stock counters, view specifications |
-| **Q5: Banking System** | [http://localhost:8085/accounts/list](http://localhost:8085/accounts/list) | Register account, deposit money, test overdraft rejection |
-| **Q6: Course System** | [http://localhost:8086/courses/list](http://localhost:8086/courses/list) | Enroll student, test course capacity limit & duplicate rejection |
-| **Q7: Blood Donor System** | [http://localhost:8087/donors/list](http://localhost:8087/donors/list) | Filter by blood group, verify 90-day donation eligibility badges |
-| **Q8: Pharmacy System** | [http://localhost:8088/medicines/list](http://localhost:8088/medicines/list) | Search by ID/Name, verify expired batch warnings & negative stock blocks |
+*(Note: You can simply open `http://localhost:<PORT>/` and it will automatically display the home list page!)*
+
+| Question | Browser URL | Direct Root URL | What to Test |
+|----------|-------------|-----------------|--------------|
+| **Q1: Hospital System** | [http://localhost:8081/patients/list](http://localhost:8081/patients/list) | [http://localhost:8081/](http://localhost:8081/) | Register patient, search by ID, update, delete |
+| **Q2: Library System** | [http://localhost:8082/books/list](http://localhost:8082/books/list) | [http://localhost:8082/](http://localhost:8082/) | Add book, view catalogue, search, edit copies |
+| **Q3: Employee System** | [http://localhost:8083/employees/list](http://localhost:8083/employees/list) | [http://localhost:8083/](http://localhost:8083/) | Add employee, view department, edit salary |
+| **Q4: Inventory System** | [http://localhost:8084/products/list](http://localhost:8084/products/list) | [http://localhost:8084/](http://localhost:8084/) | Add product, stock counters, view specifications |
+| **Q5: Banking System** | [http://localhost:8085/accounts/list](http://localhost:8085/accounts/list) | [http://localhost:8085/](http://localhost:8085/) | Register account, deposit money, test overdraft rejection |
+| **Q6: Course System** | [http://localhost:8086/courses/list](http://localhost:8086/courses/list) | [http://localhost:8086/](http://localhost:8086/) | Enroll student, test course capacity limit & duplicate rejection |
+| **Q7: Blood Donor System** | [http://localhost:8087/donors/list](http://localhost:8087/donors/list) | [http://localhost:8087/](http://localhost:8087/) | Filter by blood group, verify 90-day donation eligibility badges |
+| **Q8: Pharmacy System** | [http://localhost:8088/medicines/list](http://localhost:8088/medicines/list) | [http://localhost:8088/](http://localhost:8088/) | Search by ID/Name, verify expired batch warnings & negative stock blocks |
 
 ---
 

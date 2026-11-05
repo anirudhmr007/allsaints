@@ -45,9 +45,8 @@ Question7_Blood_Donor_Management_System/
         ├── resources/
         │   └── application.properties               # Port 8087, PostgreSQL, & JSP configuration
         └── webapp/WEB-INF/jsp/
-            ├── donor-list.jsp                       # Directory with blood group dropdown filter
-            ├── donor-form.jsp                       # Registration & update form
-            └── donor-view.jsp                       # Medical profile & eligibility badge
+            ├── donor-list.jsp                       # Directory with blood group filter & eligibility badges
+            └── donor-form.jsp                       # Simple Registration & edit form
 ```
 
 ---
@@ -132,14 +131,12 @@ Click the red square **Terminate** button in the Console or the **Stop** button 
 
 | Operation | HTTP Method | URL | Description |
 |-----------|-------------|-----|-------------|
-| Display Registered Donors | `GET` | `/donors/list` or `/` | View all donors with eligibility badges |
-| Filter by Blood Group | `GET` | `/donors/search-by-group?bloodGroup=O+` | Filter donors by Blood Group |
-| Search by Donor ID | `GET` | `/donors/search-by-id?donorId=1` | Search donor by numeric ID |
-| Register Donor Form | `GET` | `/donors/register` | Open donor registration form |
-| Save Donor | `POST` | `/donors/register` | Save donor with validation |
-| View Donor Profile | `GET` | `/donors/view/{id}` | Detailed medical card & eligibility |
+| Display Registered Donors | `GET` | `/` or `/donors` or `/donors/list` | View all donors with eligibility badges |
+| Filter by Blood Group | `GET` | `/donors/filter?bloodGroup=O+` | Filter donors by Blood Group |
+| Search by Donor ID | `GET` | `/donors/search?donorId=1` | Search donor by numeric ID |
+| Register Donor Form | `GET` | `/donors/add` | Open simple donor registration form |
+| Save / Update Donor | `POST` | `/donors/save` | Save new or updated donor with validation |
 | Edit Donor Form | `GET` | `/donors/edit/{id}` | Form to modify donor information |
-| Update Donor | `POST` | `/donors/update/{id}` | Save updated donor information |
 | Delete Donor | `GET` | `/donors/delete/{id}` | Delete donor record by ID |
 
 ---

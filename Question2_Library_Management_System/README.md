@@ -43,8 +43,7 @@ Question2_Library_Management_System/
         │   └── application.properties           # PostgreSQL datasource & JSP view config
         └── webapp/WEB-INF/jsp/
             ├── book-list.jsp                    # JSP table view & search bar
-            ├── book-form.jsp                    # JSP form for adding & editing books
-            └── book-view.jsp                    # JSP single book details view
+            └── book-form.jsp                    # JSP form for adding & editing books
 ```
 
 ---
@@ -119,13 +118,11 @@ Click the red square **Terminate** button in the Console or the **Stop** button 
 
 | Operation | HTTP Method | URL | Description |
 |-----------|-------------|-----|-------------|
-| Display Books | `GET` | `/books/list` or `/` | Show all books in a JSP table |
-| Add Book Form | `GET` | `/books/new` | Display add book form |
-| Save Book | `POST` | `/books/new` | Persist new book in PostgreSQL |
+| Display Books | `GET` | `/` or `/books` or `/books/list` | Show all books in a JSP table |
+| Add Book Form | `GET` | `/books/add` | Display simple add book form |
+| Save / Update Book | `POST` | `/books/save` | Persist new or updated book in PostgreSQL |
 | Search Book | `GET` | `/books/search?bookId=1` | Search book by Book ID |
-| View Book Details | `GET` | `/books/view/{id}` | View full book specifications |
 | Edit Book Form | `GET` | `/books/edit/{id}` | Edit book form prefilled |
-| Update Book | `POST` | `/books/update/{id}` | Save updated book information |
 | Delete Book | `GET` | `/books/delete/{id}` | Delete book record by Book ID |
 
 ---

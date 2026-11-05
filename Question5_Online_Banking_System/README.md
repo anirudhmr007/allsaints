@@ -45,9 +45,8 @@ Question5_Online_Banking_System/
         │   └── application.properties               # Port 8085, DB, & JSP config
         └── webapp/WEB-INF/jsp/
             ├── account-list.jsp                     # Accounts directory & search
-            ├── account-form.jsp                     # Registration & update form
-            ├── account-transaction.jsp              # Deposit and withdraw portal
-            └── account-balance.jsp                  # Balance inquiry page
+            ├── account-form.jsp                     # Registration form
+            └── transaction.jsp                      # Clean Deposit and withdraw portal
 ```
 
 ---
@@ -135,12 +134,11 @@ Click the red square **Terminate** button in the Console or the **Stop** button 
 
 | Operation | HTTP Method | URL | Description |
 |-----------|-------------|-----|-------------|
-| Display Accounts | `GET` | `/accounts/list` or `/` | Show all customer accounts |
-| Register Account Form | `GET` | `/accounts/register` | Open account registration form |
-| Create Account | `POST` | `/accounts/register` | Save account in PostgreSQL |
+| Display Accounts | `GET` | `/` or `/accounts` or `/accounts/list` | Show all customer accounts |
+| Register Account Form | `GET` | `/accounts/register` or `/accounts/add` | Open account registration form |
+| Create Account | `POST` | `/accounts/save` | Save account in PostgreSQL |
 | Search Account | `GET` | `/accounts/search?accountNumber=ACC1000101` | Search account by Account Number |
-| Check Balance | `GET` | `/accounts/balance?accountNumber=ACC1000101` | Dedicated balance inquiry |
-| Transaction Page | `GET` | `/accounts/transaction?accountNumber=...` | Deposit/Withdraw interface |
+| Transaction Page | `GET` | `/accounts/transaction/{id}` | Simple Deposit/Withdraw interface |
 | Process Deposit | `POST` | `/accounts/deposit` | Execute deposit transaction |
 | Process Withdrawal | `POST` | `/accounts/withdraw` | Execute withdrawal with overdraft checks |
 | Delete Account | `GET` | `/accounts/delete/{id}` | Close/delete account record |

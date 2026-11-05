@@ -46,9 +46,8 @@ Question8_Pharmacy_Management_System/
         ├── resources/
         │   └── application.properties             # Port 8088, DB, & JSP config
         └── webapp/WEB-INF/jsp/
-            ├── medicine-list.jsp                  # Formulary table with expired warnings
-            ├── medicine-form.jsp                  # Medicine registration & edit form
-            └── medicine-view.jsp                  # Medicine dossier & shelf life info
+            ├── medicine-list.jsp                  # Formulary table with expired warnings & search
+            └── medicine-form.jsp                  # Simple medicine registration & edit form
 ```
 
 ---
@@ -135,13 +134,11 @@ Click the red square **Terminate** button in the Console or the **Stop** button 
 
 | Operation | HTTP Method | URL | Description |
 |-----------|-------------|-----|-------------|
-| View All Medicines | `GET` | `/medicines/list` or `/` | Formularies table with expired batch alerts |
-| Add Medicine Form | `GET` | `/medicines/new` | Open new formulation form |
-| Save Medicine | `POST` | `/medicines/new` | Save medicine in PostgreSQL |
-| Search Medicines | `GET` | `/medicines/search?query=Amoxicillin` | Search by Medicine ID or Name |
-| View Medicine Details | `GET` | `/medicines/view/{id}` | Dossier & remaining shelf life |
+| View All Medicines | `GET` | `/` or `/medicines` or `/medicines/list` | Formularies table with expired batch alerts |
+| Add Medicine Form | `GET` | `/medicines/add` | Open simple formulation form |
+| Save / Update Medicine | `POST` | `/medicines/save` | Save new or updated medicine in PostgreSQL |
+| Search Medicines | `GET` | `/medicines/search?keyword=Amoxicillin` | Search by Medicine ID or Name |
 | Edit Medicine Form | `GET` | `/medicines/edit/{id}` | Edit formulation details |
-| Update Medicine | `POST` | `/medicines/update/{id}` | Save modifications |
 | Delete Medicine | `GET` | `/medicines/delete/{id}` | Remove medicine record by ID |
 
 ---

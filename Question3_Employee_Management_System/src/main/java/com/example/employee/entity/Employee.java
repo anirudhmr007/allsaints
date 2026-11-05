@@ -1,11 +1,13 @@
 package com.example.employee.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
 
+/**
+ * Employee Entity represents an employee record.
+ * Table: employees
+ */
 @Entity
 @Table(name = "employees")
 public class Employee {
@@ -15,57 +17,41 @@ public class Employee {
     @Column(name = "employee_id")
     private Long employeeId;
 
-    @NotBlank(message = "Employee name is required")
-    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull(message = "Age is required")
-    @Min(value = 18, message = "Employee age must be at least 18")
-    @Max(value = 75, message = "Employee age must be at most 75")
     @Column(name = "age", nullable = false)
-    private Integer age;
+    private int age;
 
-    @NotBlank(message = "Gender is required")
     @Column(name = "gender", nullable = false)
     private String gender;
 
-    @NotBlank(message = "Contact number is required")
-    @Pattern(regexp = "^[0-9]{10}$", message = "Contact number must be exactly 10 digits")
     @Column(name = "contact_number", nullable = false)
     private String contactNumber;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
     @Column(name = "email", nullable = false)
     private String email;
 
-    @NotBlank(message = "Address is required")
     @Column(name = "address", nullable = false)
     private String address;
 
-    @NotBlank(message = "Department is required")
     @Column(name = "department", nullable = false)
     private String department;
 
-    @NotBlank(message = "Designation is required")
     @Column(name = "designation", nullable = false)
     private String designation;
 
-    @NotNull(message = "Date of joining is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "date_of_joining", nullable = false)
     private LocalDate dateOfJoining;
 
-    @NotNull(message = "Salary is required")
-    @DecimalMin(value = "0.01", message = "Salary must be greater than zero")
     @Column(name = "salary", nullable = false)
-    private Double salary;
+    private double salary;
 
     public Employee() {
     }
 
-    public Employee(String name, Integer age, String gender, String contactNumber, String email, String address, String department, String designation, LocalDate dateOfJoining, Double salary) {
+    public Employee(String name, int age, String gender, String contactNumber, String email, String address, String department, String designation, LocalDate dateOfJoining, double salary) {
         this.name = name;
         this.age = age;
         this.gender = gender;
@@ -94,11 +80,11 @@ public class Employee {
         this.name = name;
     }
 
-    public Integer getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -158,29 +144,11 @@ public class Employee {
         this.dateOfJoining = dateOfJoining;
     }
 
-    public Double getSalary() {
+    public double getSalary() {
         return salary;
     }
 
-    public void setSalary(Double salary) {
+    public void setSalary(double salary) {
         this.salary = salary;
     }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "employeeId=" + employeeId +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", gender='" + gender + '\'' +
-                ", contactNumber='" + contactNumber + '\'' +
-                ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                ", department='" + department + '\'' +
-                ", designation='" + designation + '\'' +
-                ", dateOfJoining=" + dateOfJoining +
-                ", salary=" + salary +
-                '}';
-    }
 }
-

@@ -2,165 +2,95 @@ package com.example.blooddonor.controller;
 
 import com.example.blooddonor.entity.BloodDonor;
 import com.example.blooddonor.service.BloodDonorService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Controller Layer: Handles web requests for Blood Donor Management System.
+ */
 @Controller
-@RequestMapping({"/", "/donors"})
 public class BloodDonorController {
 
-    private final BloodDonorService donorService;
-
     @Autowired
-    public BloodDonorController(BloodDonorService donorService) {
-        this.donorService = donorService;
-    }
+    private BloodDonorService donorService;
 
-    // Display all registered blood donors in a JSP table
-    @GetMapping({"", "/list"})
-    public String listDonors(Model model) {
-        List<BloodDonor> donors = donorService.getAllDonors();
-        model.addAttribute("donors", donors);
+    // 1. Display all registered blood donors in a JSP table
+    @GetMapping({"/", "/donors", "/donors/list"})
+    public String showDonorsList(Model model) {
+        model.addAttribute("donors", donorService.getAllDonors());
         return "donor-list";
     }
 
-    // Show form to register a new blood donor
-    @GetMapping("/register")
-    public String showRegisterForm(Model model) {
-        if (!model.containsAttribute("donor")) {
-            BloodDonor donor = new BloodDonor();
-            donor.setHealthStatus("Fit");
-            model.addAttribute("donor", donor);
-        }
-        model.addAttribute("isEdit", false);
+    // 2. Show form to register a new blood donor
+    @GetMapping("/donors/add")
+    public String showAddDonorForm(Model model) {
+        BloodDonor donor = new BloodDonor();
+        donor.setHealthStatus("Fit");
+        model.addAttribute("donor", donor);
+        model.addAttribute("pageTitle", "Register New Blood Donor");
         return "donor-form";
     }
 
-    // Register a new blood donor and save details in PostgreSQL
-    @PostMapping("/register")
-    public String registerDonor(@Valid @ModelAttribute("donor") BloodDonor donor,
-                                BindingResult result,
-                                RedirectAttributes redirectAttributes,
-                                Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("isEdit", false);
-            return "donor-form";
+    // 3. Save new blood donor or update existing donor in PostgreSQL
+    @PostMapping("/donors/save")
+    public String saveDonor(@ModelAttribute("donor") BloodDonor donor, RedirectAttributes redirectAttributes) {
+        String result = donorService.saveDonorWithValidation(donor);
+        if (result.startsWith("Error")) {
+            redirectAttributes.addFlashAttribute("error", result);
+        } else {
+            redirectAttributes.addFlashAttribute("message", result);
         }
-        try {
-            donorService.saveDonor(donor);
-            redirectAttributes.addFlashAttribute("successMessage",
-                    "Blood Donor '" + donor.getName() + " (" + donor.getBloodGroup() + ")' registered successfully with ID: " + donor.getDonorId());
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/donors/register";
-        }
-        return "redirect:/donors/list";
+        return "redirect:/donors";
     }
 
-    // Search for blood donors based on Blood Group
-    @GetMapping("/search-by-group")
-    public String searchByBloodGroup(@RequestParam(value = "bloodGroup", required = false) String bloodGroup,
-                                     Model model) {
-        if (bloodGroup == null || bloodGroup.trim().isEmpty() || "ALL".equalsIgnoreCase(bloodGroup.trim())) {
-            return "redirect:/donors/list";
-        }
+    // 4. Search for blood donors based on Blood Group
+    @GetMapping("/donors/search-by-group")
+    public String searchByBloodGroup(@RequestParam(value = "bloodGroup", required = false) String bloodGroup, Model model) {
+        List<BloodDonor> results = donorService.searchByBloodGroup(bloodGroup);
+        model.addAttribute("donors", results);
+        model.addAttribute("selectedGroup", bloodGroup);
+        return "donor-list";
+    }
 
-        List<BloodDonor> donors = donorService.searchDonorsByBloodGroup(bloodGroup);
-        model.addAttribute("donors", donors);
-        model.addAttribute("selectedGroup", bloodGroup.trim());
-        if (donors.isEmpty()) {
-            model.addAttribute("searchError", "No registered donors found with Blood Group: " + bloodGroup);
+    // 5. Search for a blood donor using Donor ID
+    @GetMapping("/donors/search-by-id")
+    public String searchById(@RequestParam(value = "donorId", required = false) Long donorId, Model model) {
+        if (donorId != null) {
+            BloodDonor donor = donorService.getDonorById(donorId);
+            List<BloodDonor> resultList = new ArrayList<>();
+            if (donor != null) {
+                resultList.add(donor);
+            } else {
+                model.addAttribute("error", "No donor found with Donor ID: " + donorId);
+            }
+            model.addAttribute("donors", resultList);
+            model.addAttribute("searchedId", donorId);
         } else {
-            model.addAttribute("searchSuccess", "Found " + donors.size() + " donor(s) with Blood Group: " + bloodGroup);
+            model.addAttribute("donors", donorService.getAllDonors());
         }
         return "donor-list";
     }
 
-    // Search by Donor ID
-    @GetMapping("/search-by-id")
-    public String searchById(@RequestParam(value = "donorId", required = false) Long donorId,
-                             Model model) {
-        if (donorId == null) {
-            return "redirect:/donors/list";
-        }
-
-        Optional<BloodDonor> donorOpt = donorService.getDonorById(donorId);
-        List<BloodDonor> searchResults = new ArrayList<>();
-        if (donorOpt.isPresent()) {
-            searchResults.add(donorOpt.get());
-            model.addAttribute("searchSuccess", "Found donor record with ID: " + donorId);
-        } else {
-            model.addAttribute("searchError", "No donor found with Donor ID: " + donorId);
-        }
-        model.addAttribute("donors", searchResults);
-        model.addAttribute("searchedId", donorId);
-        return "donor-list";
+    // 6. Show form to update donor details
+    @GetMapping("/donors/edit/{id}")
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
+        BloodDonor donor = donorService.getDonorById(id);
+        model.addAttribute("donor", donor);
+        model.addAttribute("pageTitle", "Update Donor Details");
+        return "donor-form";
     }
 
-    // View donor details
-    @GetMapping("/view/{id}")
-    public String viewDonor(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<BloodDonor> donorOpt = donorService.getDonorById(id);
-        if (donorOpt.isPresent()) {
-            model.addAttribute("donor", donorOpt.get());
-            return "donor-view";
-        }
-        redirectAttributes.addFlashAttribute("errorMessage", "Donor not found with ID: " + id);
-        return "redirect:/donors/list";
-    }
-
-    // Show edit donor form
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<BloodDonor> donorOpt = donorService.getDonorById(id);
-        if (donorOpt.isPresent()) {
-            model.addAttribute("donor", donorOpt.get());
-            model.addAttribute("isEdit", true);
-            return "donor-form";
-        }
-        redirectAttributes.addFlashAttribute("errorMessage", "Donor not found with ID: " + id);
-        return "redirect:/donors/list";
-    }
-
-    // Update donor details
-    @PostMapping("/update/{id}")
-    public String updateDonor(@PathVariable("id") Long id,
-                              @Valid @ModelAttribute("donor") BloodDonor donor,
-                              BindingResult result,
-                              RedirectAttributes redirectAttributes,
-                              Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("isEdit", true);
-            return "donor-form";
-        }
-        try {
-            donorService.updateDonor(id, donor);
-            redirectAttributes.addFlashAttribute("successMessage", "Donor ID " + id + " updated successfully!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error updating donor: " + e.getMessage());
-        }
-        return "redirect:/donors/list";
-    }
-
-    // Delete a donor record using Donor ID
-    @GetMapping("/delete/{id}")
+    // 7. Delete a donor record using Donor ID
+    @GetMapping("/donors/delete/{id}")
     public String deleteDonor(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        boolean deleted = donorService.deleteDonorById(id);
-        if (deleted) {
-            redirectAttributes.addFlashAttribute("successMessage", "Blood donor record with ID " + id + " deleted successfully!");
-        } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Donor record with ID " + id + " not found.");
-        }
-        return "redirect:/donors/list";
+        donorService.deleteDonor(id);
+        redirectAttributes.addFlashAttribute("message", "Blood donor record deleted successfully!");
+        return "redirect:/donors";
     }
 }
-

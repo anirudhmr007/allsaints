@@ -43,8 +43,7 @@ Question4_Product_Inventory_Management_System/
         │   └── application.properties            # Port 8084, PostgreSQL, & JSP view configuration
         └── webapp/WEB-INF/jsp/
             ├── product-list.jsp                  # Inventory overview & search
-            ├── product-form.jsp                  # Product creation/modification form
-            └── product-view.jsp                  # Full product specification view
+            └── product-form.jsp                  # Simple product creation & edit form
 ```
 
 ---
@@ -117,13 +116,11 @@ Click the red square **Terminate** button in the Console or the **Stop** button 
 
 | Operation | HTTP Method | URL | Description |
 |-----------|-------------|-----|-------------|
-| List Products | `GET` | `/products/list` or `/` | Show all products in JSP table |
-| New Product Form | `GET` | `/products/new` | Open product registration form |
-| Save Product | `POST` | `/products/new` | Save new product to PostgreSQL |
+| List Products | `GET` | `/` or `/products` or `/products/list` | Show all products in JSP table |
+| New Product Form | `GET` | `/products/add` | Open simple product registration form |
+| Save / Update Product | `POST` | `/products/save` | Save new or updated product to PostgreSQL |
 | Search Product | `GET` | `/products/search?productId=1` | Search product by Product ID |
-| View Product Details | `GET` | `/products/view/{id}` | View full specifications |
 | Edit Product Form | `GET` | `/products/edit/{id}` | Edit product pre-filled form |
-| Update Product | `POST` | `/products/update/{id}` | Update product details |
 | Delete Product | `GET` | `/products/delete/{id}` | Remove product by ID |
 
 ---

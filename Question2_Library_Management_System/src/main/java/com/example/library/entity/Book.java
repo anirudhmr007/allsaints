@@ -1,8 +1,11 @@
 package com.example.library.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 
+/**
+ * Book Entity represents a book in the library catalogue.
+ * Table: books
+ */
 @Entity
 @Table(name = "books")
 public class Book {
@@ -12,46 +15,34 @@ public class Book {
     @Column(name = "book_id")
     private Long bookId;
 
-    @NotBlank(message = "Book title is required")
-    @Size(min = 1, max = 200, message = "Title must be between 1 and 200 characters")
     @Column(name = "title", nullable = false)
     private String title;
 
-    @NotBlank(message = "Author is required")
     @Column(name = "author", nullable = false)
     private String author;
 
-    @NotBlank(message = "Publisher is required")
     @Column(name = "publisher", nullable = false)
     private String publisher;
 
-    @NotBlank(message = "ISBN is required")
     @Column(name = "isbn", nullable = false, unique = true)
     private String isbn;
 
-    @NotBlank(message = "Edition is required")
     @Column(name = "edition", nullable = false)
     private String edition;
 
-    @NotNull(message = "Publication year is required")
-    @Min(value = 1000, message = "Publication year must be valid")
-    @Max(value = 2100, message = "Publication year cannot be in the distant future")
     @Column(name = "publication_year", nullable = false)
-    private Integer publicationYear;
+    private int publicationYear;
 
-    @NotBlank(message = "Category is required")
     @Column(name = "category", nullable = false)
     private String category;
 
-    @NotNull(message = "Available copies is required")
-    @Min(value = 0, message = "Available copies cannot be negative")
     @Column(name = "available_copies", nullable = false)
-    private Integer availableCopies;
+    private int availableCopies;
 
     public Book() {
     }
 
-    public Book(String title, String author, String publisher, String isbn, String edition, Integer publicationYear, String category, Integer availableCopies) {
+    public Book(String title, String author, String publisher, String isbn, String edition, int publicationYear, String category, int availableCopies) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
@@ -110,11 +101,11 @@ public class Book {
         this.edition = edition;
     }
 
-    public Integer getPublicationYear() {
+    public int getPublicationYear() {
         return publicationYear;
     }
 
-    public void setPublicationYear(Integer publicationYear) {
+    public void setPublicationYear(int publicationYear) {
         this.publicationYear = publicationYear;
     }
 
@@ -126,27 +117,11 @@ public class Book {
         this.category = category;
     }
 
-    public Integer getAvailableCopies() {
+    public int getAvailableCopies() {
         return availableCopies;
     }
 
-    public void setAvailableCopies(Integer availableCopies) {
+    public void setAvailableCopies(int availableCopies) {
         this.availableCopies = availableCopies;
     }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "bookId=" + bookId +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", publisher='" + publisher + '\'' +
-                ", isbn='" + isbn + '\'' +
-                ", edition='" + edition + '\'' +
-                ", publicationYear=" + publicationYear +
-                ", category='" + category + '\'' +
-                ", availableCopies=" + availableCopies +
-                '}';
-    }
 }
-

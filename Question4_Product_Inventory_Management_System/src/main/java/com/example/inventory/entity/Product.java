@@ -1,11 +1,13 @@
 package com.example.inventory.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
 
+/**
+ * Product Entity represents a product in the warehouse inventory.
+ * Table: products
+ */
 @Entity
 @Table(name = "products")
 public class Product {
@@ -15,42 +17,31 @@ public class Product {
     @Column(name = "product_id")
     private Long productId;
 
-    @NotBlank(message = "Product name is required")
-    @Size(min = 2, max = 150, message = "Product name must be between 2 and 150 characters")
     @Column(name = "product_name", nullable = false)
     private String productName;
 
-    @NotBlank(message = "Category is required")
     @Column(name = "category", nullable = false)
     private String category;
 
-    @NotBlank(message = "Brand is required")
     @Column(name = "brand", nullable = false)
     private String brand;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description")
     private String description;
 
-    @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.01", message = "Price must be greater than zero")
     @Column(name = "price", nullable = false)
-    private Double price;
+    private double price;
 
-    @NotNull(message = "Quantity is required")
-    @Min(value = 0, message = "Quantity cannot be negative")
     @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    private int quantity;
 
-    @NotBlank(message = "Supplier name is required")
     @Column(name = "supplier_name", nullable = false)
     private String supplierName;
 
-    @NotNull(message = "Manufacturing date is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "manufacturing_date", nullable = false)
     private LocalDate manufacturingDate;
 
-    @NotNull(message = "Expiry date is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "expiry_date", nullable = false)
     private LocalDate expiryDate;
@@ -58,7 +49,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String productName, String category, String brand, String description, Double price, Integer quantity, String supplierName, LocalDate manufacturingDate, LocalDate expiryDate) {
+    public Product(String productName, String category, String brand, String description, double price, int quantity, String supplierName, LocalDate manufacturingDate, LocalDate expiryDate) {
         this.productName = productName;
         this.category = category;
         this.brand = brand;
@@ -110,19 +101,19 @@ public class Product {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -149,20 +140,4 @@ public class Product {
     public void setExpiryDate(LocalDate expiryDate) {
         this.expiryDate = expiryDate;
     }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "productId=" + productId +
-                ", productName='" + productName + '\'' +
-                ", category='" + category + '\'' +
-                ", brand='" + brand + '\'' +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                ", supplierName='" + supplierName + '\'' +
-                ", manufacturingDate=" + manufacturingDate +
-                ", expiryDate=" + expiryDate +
-                '}';
-    }
 }
-

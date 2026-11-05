@@ -43,8 +43,7 @@ Question1_Hospital_Patient_Registration_System/
         │   └── application.properties             # DB connection, JPA, & JSP view resolver
         └── webapp/WEB-INF/jsp/
             ├── patient-list.jsp                   # JSP view displaying patient table & search
-            ├── patient-form.jsp                   # JSP view for registration & updating
-            └── patient-view.jsp                   # JSP view for single patient details
+            └── patient-form.jsp                   # JSP view for registration & updating (Add & Edit)
 ```
 
 ---
@@ -134,13 +133,11 @@ Open Chrome, Edge, or Firefox and navigate to:
 
 | Operation | HTTP Method | URL | Description |
 |-----------|-------------|-----|-------------|
-| Display Patients | `GET` | `/patients/list` or `/` | View all registered patients in JSP table |
-| Register Patient Form | `GET` | `/patients/register` | Open patient registration form |
-| Save Patient | `POST` | `/patients/register` | Save patient to PostgreSQL |
+| Display Patients | `GET` | `/` or `/patients` or `/patients/list` | View all registered patients in JSP table |
+| Register Patient Form | `GET` | `/patients/add` | Open simple patient registration form |
+| Save / Update Patient | `POST` | `/patients/save` | Save new or updated patient to PostgreSQL |
 | Search Patient | `GET` | `/patients/search?patientId=1` | Search patient by Patient ID |
-| View Patient | `GET` | `/patients/view/{id}` | View single patient profile |
-| Edit Patient Form | `GET` | `/patients/edit/{id}` | Open update form pre-populated |
-| Update Patient | `POST` | `/patients/update/{id}` | Save updated patient details |
+| Edit Patient Form | `GET` | `/patients/edit/{id}` | Open edit form pre-populated |
 | Delete Patient | `GET` | `/patients/delete/{id}` | Delete patient by ID |
 
 ---
